@@ -1,8 +1,6 @@
 ﻿#pragma once
 #include "ServiceContainer.h"
-#include "AnimalEditAddForm.h"
-#include "DashboardEventForm.h"
-
+#include "EventEditAddForm.h"
 
 namespace Zoo {
 
@@ -16,27 +14,32 @@ namespace Zoo {
 	/// <summary>
 	/// Сводка для Dashboard
 	/// </summary>
-	/// 
-	ref class DashboardEventForm; // Forward declaration
 
-
-	public ref class DashboardAnimalForm : public System::Windows::Forms::Form
+	
+	public ref class DashboardEventForm : public System::Windows::Forms::Form
 	{
 	public:
-		DashboardAnimalForm(void)
+		Form ^dashboardAnimalForm;
+		DashboardEventForm(void)
 		{
 			InitializeComponent();
-			LoadAnimals();
+			LoadEvents();
 			//
 			//TODO: добавьте код конструктора
 			//
+		}
+		DashboardEventForm(Form^ dashboardAnimalForm)
+		{
+			this->dashboardAnimalForm = dashboardAnimalForm;
+			InitializeComponent();
+			LoadEvents();
 		}
 
 	protected:
 		/// <summary>
 		/// Освободить все используемые ресурсы.
 		/// </summary>
-		~DashboardAnimalForm()
+		~DashboardEventForm()
 		{
 			if (components)
 			{
@@ -50,7 +53,7 @@ namespace Zoo {
 	private: System::Windows::Forms::Label^ labelAnimal;
 	private: System::ComponentModel::BackgroundWorker^ backgroundWorker1;
 	private: System::ComponentModel::BackgroundWorker^ backgroundWorker2;
-	private: System::Windows::Forms::DataGridView^ dataAnimal;
+	private: System::Windows::Forms::DataGridView^ dataEvent;
 
 
 
@@ -60,18 +63,24 @@ namespace Zoo {
 
 	private: System::Windows::Forms::Button^ buttonAdd;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnId;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnSpecies;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnAge;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnRation;
-	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnLivEnv;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnName;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnDate;
+	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnDescription;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnEdit;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^ columnDelete;
+
+
+
+
+
+
+
 
 	private:
 		/// <summary>
 		/// Обязательная переменная конструктора.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -86,17 +95,16 @@ namespace Zoo {
 			this->labelAnimal = (gcnew System::Windows::Forms::Label());
 			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
 			this->backgroundWorker2 = (gcnew System::ComponentModel::BackgroundWorker());
-			this->dataAnimal = (gcnew System::Windows::Forms::DataGridView());
+			this->dataEvent = (gcnew System::Windows::Forms::DataGridView());
 			this->columnId = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->columnSpecies = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->columnAge = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->columnRation = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
-			this->columnLivEnv = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->columnName = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->columnDate = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
+			this->columnDescription = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->columnEdit = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->columnDelete = (gcnew System::Windows::Forms::DataGridViewTextBoxColumn());
 			this->buttonAdd = (gcnew System::Windows::Forms::Button());
 			this->panel1->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataAnimal))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataEvent))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// panel1
@@ -126,70 +134,64 @@ namespace Zoo {
 			this->labelEvent->AutoSize = true;
 			this->labelEvent->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
+			this->labelEvent->ForeColor = System::Drawing::SystemColors::Highlight;
 			this->labelEvent->Location = System::Drawing::Point(53, 181);
 			this->labelEvent->Name = L"labelEvent";
 			this->labelEvent->Size = System::Drawing::Size(85, 29);
 			this->labelEvent->TabIndex = 1;
 			this->labelEvent->Text = L"Events";
-			this->labelEvent->Click += gcnew System::EventHandler(this, &DashboardAnimalForm::switchToEvents);
 			// 
 			// labelAnimal
 			// 
 			this->labelAnimal->AutoSize = true;
 			this->labelAnimal->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 18, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->labelAnimal->ForeColor = System::Drawing::SystemColors::Highlight;
 			this->labelAnimal->Location = System::Drawing::Point(53, 131);
 			this->labelAnimal->Name = L"labelAnimal";
 			this->labelAnimal->Size = System::Drawing::Size(98, 29);
 			this->labelAnimal->TabIndex = 0;
 			this->labelAnimal->Text = L"Animals";
+			this->labelAnimal->Click += gcnew System::EventHandler(this, &DashboardEventForm::switchToAnimal);
 			// 
-			// dataAnimal
+			// dataEvent
 			// 
-			this->dataAnimal->AllowUserToAddRows = false;
-			this->dataAnimal->BackgroundColor = System::Drawing::SystemColors::Control;
-			this->dataAnimal->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataAnimal->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(7) {
-				this->columnId,
-					this->columnSpecies, this->columnAge, this->columnRation, this->columnLivEnv, this->columnEdit, this->columnDelete
+			this->dataEvent->AllowUserToAddRows = false;
+			this->dataEvent->BackgroundColor = System::Drawing::SystemColors::Control;
+			this->dataEvent->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataEvent->Columns->AddRange(gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >(6) {
+				this->columnId, this->columnName,
+					this->columnDate, this->columnDescription, this->columnEdit, this->columnDelete
 			});
-			this->dataAnimal->Location = System::Drawing::Point(224, 28);
-			this->dataAnimal->Name = L"dataAnimal";
-			this->dataAnimal->Size = System::Drawing::Size(943, 516);
-			this->dataAnimal->TabIndex = 1;
-			this->dataAnimal->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &DashboardAnimalForm::OnCellContentClick);
+			this->dataEvent->Location = System::Drawing::Point(320, 28);
+			this->dataEvent->Name = L"dataEvent";
+			this->dataEvent->Size = System::Drawing::Size(743, 516);
+			this->dataEvent->TabIndex = 1;
+			this->dataEvent->CellContentClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &DashboardEventForm::OnCellContentClick);
 			// 
 			// columnId
 			// 
 			this->columnId->HeaderText = L"ID";
 			this->columnId->Name = L"columnId";
+			this->columnId->Width = 50;
 			// 
-			// columnSpecies
+			// columnName
 			// 
-			this->columnSpecies->HeaderText = L"Species";
-			this->columnSpecies->MinimumWidth = 100;
-			this->columnSpecies->Name = L"columnSpecies";
-			this->columnSpecies->Width = 200;
+			this->columnName->HeaderText = L"Name";
+			this->columnName->MinimumWidth = 100;
+			this->columnName->Name = L"columnName";
+			this->columnName->Width = 150;
 			// 
-			// columnAge
+			// columnDate
 			// 
-			this->columnAge->HeaderText = L"Age";
-			this->columnAge->Name = L"columnAge";
+			this->columnDate->HeaderText = L"Date";
+			this->columnDate->Name = L"columnDate";
 			// 
-			// columnRation
+			// columnDescription
 			// 
-			this->columnRation->HeaderText = L"Ration";
-			this->columnRation->MinimumWidth = 50;
-			this->columnRation->Name = L"columnRation";
-			this->columnRation->Width = 150;
-			// 
-			// columnLivEnv
-			// 
-			this->columnLivEnv->HeaderText = L"Living environment";
-			this->columnLivEnv->MinimumWidth = 50;
-			this->columnLivEnv->Name = L"columnLivEnv";
-			this->columnLivEnv->Width = 150;
+			this->columnDescription->HeaderText = L"Description";
+			this->columnDescription->MinimumWidth = 50;
+			this->columnDescription->Name = L"columnDescription";
+			this->columnDescription->Width = 200;
 			// 
 			// columnEdit
 			// 
@@ -211,20 +213,20 @@ namespace Zoo {
 			this->buttonAdd->TabIndex = 2;
 			this->buttonAdd->Text = L"Add";
 			this->buttonAdd->UseVisualStyleBackColor = true;
-			this->buttonAdd->Click += gcnew System::EventHandler(this, &DashboardAnimalForm::OnAddButtonClick);
+			this->buttonAdd->Click += gcnew System::EventHandler(this, &DashboardEventForm::OnAddButtonClick);
 			// 
-			// DashboardAnimalForm
+			// DashboardEventForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1184, 761);
 			this->Controls->Add(this->buttonAdd);
-			this->Controls->Add(this->dataAnimal);
+			this->Controls->Add(this->dataEvent);
 			this->Controls->Add(this->panel1);
-			this->Name = L"DashboardAnimalForm";
+			this->Name = L"DashboardEventForm";
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataAnimal))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataEvent))->EndInit();
 			this->ResumeLayout(false);
 
 		};
@@ -232,14 +234,14 @@ namespace Zoo {
 		void OnCellContentClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
 			if (e->RowIndex >= 0) {
 				// Retrieve the ID directly from the "ID" column
-				int animalId = Convert::ToInt32(this->dataAnimal->Rows[e->RowIndex]->Cells["columnId"]->Value);
+				int eventId = Convert::ToInt32(this->dataEvent->Rows[e->RowIndex]->Cells["columnId"]->Value);
 
 				// Check if Edit or Delete button was clicked
 				if (e->ColumnIndex == this->columnEdit->Index) {
-					OpenEditAddForm(true, animalId);
+					OpenEditAddForm(true, eventId);
 				}
 				else if (e->ColumnIndex == this->columnDelete->Index) {
-					HandleDeleteClick(animalId);
+					HandleDeleteClick(eventId);
 				}
 			}
 		}
@@ -248,45 +250,41 @@ namespace Zoo {
 			OpenEditAddForm(false, -1); // Add mode
 		}
 
-		void OpenEditAddForm(bool isEditMode, int animalId) {
-			std::shared_ptr<Animal> existingAnimal = nullptr;
+		void OpenEditAddForm(bool isEditMode, int eventId) {
+			std::shared_ptr<Event> existingEvent = nullptr;
 
 			if (isEditMode) {
-				auto animalService = ServiceContainer::getService<AnimalService>();
-				if (!animalService) {
-					MessageBox::Show("Animal service not available!", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				auto eventService = ServiceContainer::getService<EventService>();
+				if (!eventService) {
+					MessageBox::Show("Event service not available!", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					return;
 				}
 
-				auto animalOpt = animalService->findById(animalId); // Assuming this returns std::shared_ptr<Animal>*
-				if (!animalOpt) {
-					MessageBox::Show("Animal not found!", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+				auto eventOpt = eventService->findById(eventId);
+				if (!eventOpt) {
+					MessageBox::Show("Event not found!", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					return;
 				}
 
-				existingAnimal = *animalOpt; // Dereference the pointer to assign the actual shared_ptr
+				existingEvent = *eventOpt; // Dereference the pointer to assign the actual shared_ptr
 			}
 
 			// Create and display the form
-			AnimalEditAddForm^ form = gcnew AnimalEditAddForm(existingAnimal.get());
+			EventEditAddForm^ form = gcnew EventEditAddForm(existingEvent.get());
 			form->ShowDialog();
 
 			// Refresh the data grid
-			LoadAnimals();
+			LoadEvents();
 		}
 
-
-
-
-
-		void HandleDeleteClick(int animalId) {
+		void HandleDeleteClick(int id) {
 			try {
-				auto animalService = ServiceContainer::getService<AnimalService>();
+				auto eventService = ServiceContainer::getService<EventService>();
 
-				animalService->deleteRecord(animalId);
+				eventService->deleteRecord(id);
 
 				// Refresh the grid
-				LoadAnimals();
+				LoadEvents();
 			}
 			catch (const std::exception& ex) {
 				MessageBox::Show(gcnew String(ex.what()), "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
@@ -294,22 +292,20 @@ namespace Zoo {
 		}
 
 #pragma endregion
-		void LoadAnimals()
+		void LoadEvents()
 		{
 			try
 			{
-				auto animalService = ServiceContainer::getService<AnimalService>();
-				this->dataAnimal->Rows->Clear();
+				auto eventService = ServiceContainer::getService<EventService>();
+				this->dataEvent->Rows->Clear();
 
-				std::cout << animalService->readAll().size() << "\n";
-				for (Animal animal : animalService->readAll())
+				for (Event event : eventService->readAll())
 				{
-					this->dataAnimal->Rows->Add(gcnew array<Object^> {
-							animal.getId(),
-							gcnew String(animal.getSpecies().c_str()),
-							animal.getAge(),
-							gcnew String(animal.getRation().c_str()),
-							gcnew String(animal.getLivingEnvironment().c_str()),
+					this->dataEvent->Rows->Add(gcnew array<Object^> {
+							event.getId(),
+							gcnew String(event.getName().c_str()),
+							gcnew String(event.getDateString().c_str()),
+							gcnew String(event.getDescription().c_str()),
 							L"Edit",
 							L"Delete"
 					});
@@ -321,11 +317,9 @@ namespace Zoo {
 			}
 		}
 
-		void switchToEvents(System::Object^ sender, System::EventArgs^ e) {
-			this->Hide();
-			DashboardEventForm^ form = gcnew DashboardEventForm(this);
-			form->ShowDialog();
+		void switchToAnimal(System::Object^ sender, System::EventArgs^ e) {
+			this->Close();
+			dashboardAnimalForm->Show();
 		}
-
 	};
 }

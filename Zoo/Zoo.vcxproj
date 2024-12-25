@@ -154,6 +154,8 @@
     <ClCompile Include="AnimalEditAddForm.cpp" />
     <ClCompile Include="CrudOperations.cpp" />
     <ClCompile Include="DashboardAnimalForm.cpp" />
+    <ClCompile Include="EventDashboardForm.cpp" />
+    <ClCompile Include="EventEditAddForm.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="ServiceContainer.cpp" />
@@ -164,6 +166,12 @@
     </ClInclude>
     <ClInclude Include="CrudOperations.h" />
     <ClInclude Include="DashboardAnimalForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="DashboardEventForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="EventEditAddForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="LoginSignUpForm.h">
@@ -178,6 +186,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DashboardAnimalForm.resx">
       <DependentUpon>DashboardAnimalForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DashboardEventForm.resx">
+      <DependentUpon>DashboardEventForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EventEditAddForm.resx">
+      <DependentUpon>EventEditAddForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoginSignUpForm.resx">
       <DependentUpon>LoginSignUpForm.h</DependentUpon>

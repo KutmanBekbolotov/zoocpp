@@ -32,4 +32,8 @@ void populateDB() {
 
     animalService->insert(Animal(1, "Lion", 4, "Meat", "Africa"));
     animalService->insert(Animal(2, "Zebra", 2, "Grass", "Africa"));
+
+    auto eventService = ServiceContainer::getService<EventService>();
+    std::time_t currentTime = std::time(nullptr);
+    eventService->insert(Event(1, "Zoo event", currentTime, "Greet event"));
 }
