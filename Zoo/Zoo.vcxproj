@@ -151,20 +151,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AnimalControl.cpp" />
     <ClCompile Include="AnimalEditAddForm.cpp" />
     <ClCompile Include="CrudOperations.cpp" />
     <ClCompile Include="DashboardAnimalForm.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Models.cpp" />
-    <ClCompile Include="MyForm.cpp" />
     <ClCompile Include="ServiceContainer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AnimalControl.h">
-      <FileType>CppControl</FileType>
-    </ClInclude>
     <ClInclude Include="AnimalEditAddForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -176,9 +170,6 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Model.h" />
-    <ClInclude Include="MyForm.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
     <ClInclude Include="ServiceContainer.h" />
   </ItemGroup>
   <ItemGroup>

@@ -4,11 +4,12 @@
 #include <msclr/marshal_cppstd.h>
 
 namespace Zoo {
-
+    using namespace System;
     using namespace System::Collections;
     using namespace System::Windows::Forms;
     using namespace System::Data;
     using namespace System::Drawing;
+    using namespace msclr::interop;
 
     /// <summary>
     /// Form for editing or adding an animal.

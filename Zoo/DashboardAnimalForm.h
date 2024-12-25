@@ -242,26 +242,33 @@ namespace Zoo {
 		}
 
 		void OpenEditAddForm(bool isEditMode, int animalId) {
-			Animal* existingAnimal = nullptr;
+			std::shared_ptr<Animal> existingAnimal = nullptr;
 
 			if (isEditMode) {
 				auto animalService = ServiceContainer::getService<AnimalService>();
-				auto animalOpt = animalService->findById(animalId);
+				if (!animalService) {
+					MessageBox::Show("Animal service not available!", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
+					return;
+				}
 
+				auto animalOpt = animalService->findById(animalId); // Assuming this returns std::shared_ptr<Animal>*
 				if (!animalOpt) {
 					MessageBox::Show("Animal not found!", "Error", MessageBoxButtons::OK, MessageBoxIcon::Error);
 					return;
 				}
-				existingAnimal = animalOpt->get(); // Use the existing animal
+
+				existingAnimal = *animalOpt; // Dereference the pointer to assign the actual shared_ptr
 			}
 
-			// Open AnimalEditAddForm
-			//AnimalEditAddForm^ form = gcnew AnimalEditAddForm(existingAnimal);
-			//form->ShowDialog();
+			// Create and display the form
+			AnimalEditAddForm^ form = gcnew AnimalEditAddForm(existingAnimal.get());
+			form->ShowDialog();
 
-			// Refresh the grid
+			// Refresh the data grid
 			LoadAnimals();
 		}
+
+
 
 
 

@@ -2,7 +2,6 @@
 #include <string>
 #include <ctime>
 
-using namespace System;
 
 class Animal {
 private:
