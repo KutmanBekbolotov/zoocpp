@@ -120,16 +120,25 @@ public:
 class User {
 private:
     int id;
+    std::string name;
     std::string phoneNumber;
     std::string password;
     std::string role;
 
 public:
-    User(int id, std::string phoneNumber, std::string password, std::string role)
-        : id(id), phoneNumber(std::move(phoneNumber)), password(std::move(password)), role(std::move(role)) {}
+    User(int id, std::string name, std::string phoneNumber, std::string password, std::string role)
+        : id(id), name(name), phoneNumber(std::move(phoneNumber)), password(std::move(password)), role(std::move(role)) {}
 
     int getId() const {
         return id;
+    }
+
+    const std::string& getName() const {
+        return name;
+    }
+
+    void setName(const std::string& newName) {
+        name = newName;
     }
 
     const std::string& getPhoneNumber() const {

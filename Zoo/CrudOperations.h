@@ -94,4 +94,14 @@ public:
 class UserService : public CrudOperations<User> {
 public:
     UserService() : CrudOperations<User>("UserTable") {}
+
+    std::vector<User> readAllVisitor() {
+        std::vector<User> result;
+        for (auto& record : data) {
+            if (record && record->getRole() == "VISITOR") {
+                result.push_back(*record);
+            }
+        }
+        return result;
+    }
 };

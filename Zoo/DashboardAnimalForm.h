@@ -2,6 +2,7 @@
 #include "ServiceContainer.h"
 #include "AnimalEditAddForm.h"
 #include "DashboardEventForm.h"
+#include "DashboardVisitorsForm.h"
 
 
 namespace Zoo {
@@ -13,18 +14,20 @@ namespace Zoo {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	/// <summary>
-	/// Сводка для Dashboard
-	/// </summary>
-	/// 
-	ref class DashboardEventForm; // Forward declaration
-
-
 	public ref class DashboardAnimalForm : public System::Windows::Forms::Form
 	{
+	private:
+		DashboardEventForm^ dashboardEventForm;
+		DashboardVisitorsForm^ dashboardVisitorsForm;
+
+
 	public:
 		DashboardAnimalForm(void)
 		{
+			dashboardEventForm = gcnew DashboardEventForm(this);
+			dashboardVisitorsForm = gcnew DashboardVisitorsForm(this);
+			dashboardEventForm->setDashboardVisitorsForm(dashboardVisitorsForm);
+			dashboardVisitorsForm->setDashboardEventForm(dashboardEventForm);
 			InitializeComponent();
 			LoadAnimals();
 			//
@@ -120,6 +123,7 @@ namespace Zoo {
 			this->labelUser->Size = System::Drawing::Size(92, 29);
 			this->labelUser->TabIndex = 2;
 			this->labelUser->Text = L"Visitors";
+			this->labelUser->Click += gcnew System::EventHandler(this, &DashboardAnimalForm::stitchToVisitors);
 			// 
 			// labelEvent
 			// 
@@ -144,6 +148,7 @@ namespace Zoo {
 			this->labelAnimal->Size = System::Drawing::Size(98, 29);
 			this->labelAnimal->TabIndex = 0;
 			this->labelAnimal->Text = L"Animals";
+			this->labelAnimal->Click += gcnew System::EventHandler(this, &DashboardAnimalForm::loadAnimals);
 			// 
 			// dataAnimal
 			// 
@@ -321,10 +326,18 @@ namespace Zoo {
 			}
 		}
 
+		void loadAnimals(System::Object^ sender, System::EventArgs^ e) {
+			LoadAnimals();
+		}
+
 		void switchToEvents(System::Object^ sender, System::EventArgs^ e) {
 			this->Hide();
-			DashboardEventForm^ form = gcnew DashboardEventForm(this);
-			form->ShowDialog();
+			dashboardEventForm->Show();
+		}
+
+		void stitchToVisitors(System::Object^ sender, System::EventArgs^ e) {
+			this->Hide();
+			dashboardVisitorsForm->Show();
 		}
 
 	};

@@ -154,6 +154,7 @@
     <ClCompile Include="AnimalEditAddForm.cpp" />
     <ClCompile Include="CrudOperations.cpp" />
     <ClCompile Include="DashboardAnimalForm.cpp" />
+    <ClCompile Include="DashboardVisitorsForm.cpp" />
     <ClCompile Include="EventDashboardForm.cpp" />
     <ClCompile Include="EventEditAddForm.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -169,6 +170,9 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="DashboardEventForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
+    <ClInclude Include="DashboardVisitorsForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="EventEditAddForm.h">
@@ -189,6 +193,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DashboardEventForm.resx">
       <DependentUpon>DashboardEventForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DashboardVisitorsForm.resx">
+      <DependentUpon>DashboardVisitorsForm.h</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="EventEditAddForm.resx">
       <DependentUpon>EventEditAddForm.h</DependentUpon>
