@@ -1,48 +1,159 @@
-for windows
+1. Установите необходимые инструменты
+Компилятор MinGW или MSVC:
 
-STEP 1:
+Для CMake и сборки на Windows обычно используются:
+MSVC (устанавливается с Visual Studio Build Tools): Ссылка на установку.
+MinGW (через MSYS2 или установку mingw-w64).
+Убедитесь, что g++ или cl доступны в системе (проверьте через g++ --version или cl).
+CMake:
 
-vcpkg install libpqxx
-vcpkg install libpqxx:x64-windows
+Установите CMake и добавьте его в PATH.
+vcpkg:
 
-STEP 2:
+Скачайте и настройте vcpkg.
+Добавьте путь к vcpkg в CMake:
+bash
+Копировать код
+setx CMAKE_TOOLCHAIN_FILE "C:/path_to_vcpkg/scripts/buildsystems/vcpkg.cmake"
+Debugger (GDB или MSVC):
 
-Добавить путь vcpkg к CMake
+Если используете MinGW, убедитесь, что GDB установлен.
+Для MSVC используйте встроенный отладчик.
+2. Установите зависимости через vcpkg
+Откройте PowerShell/терминал и выполните:
+bash
+Копировать код
+vcpkg install libpqxx:x64-windows bcrypt-cpp:x64-windows qt5-base:x64-windows
+Если вы работаете с x86 архитектурой:
+bash
+Копировать код
+vcpkg install libpqxx:x86-windows bcrypt-cpp:x86-windows qt5-base:x86-windows
+3. Настройте CMakeLists.txt
+Используйте следующий файл CMakeLists.txt:
+
+cmake
+Копировать код
+cmake_minimum_required(VERSION 3.16)
+project(zoocpp)
+
+# Стандарт C++
+set(CMAKE_CXX_STANDARD 17)
+
+# Укажите путь к vcpkg (если не задан глобально)
 set(CMAKE_TOOLCHAIN_FILE "C:/path_to_vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+
+# Найдите зависимости
+find_package(PostgreSQL REQUIRED)
 find_package(libpqxx REQUIRED)
-target_link_libraries(${PROJECT_NAME} pqxx pq)
-
-STEP 3:
-
-vcpkg install bcrypt-cpp:x64-windows
-
-STEP 4:
-
-Добавить bcrypt в зависимости
-
-find_package(bcrypt REQUIRED)
-target_link_libraries(${PROJECT_NAME} bcrypt)
-
-
-STEP 5:
-
-Установить Qt
-
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
-target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+find_package(bcrypt REQUIRED)
 
+# Установка флага для MSCLR (если нужен .NET на Windows)
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /clr")
+endif()
 
-STEP 6:
+# Укажите исходные файлы
+set(SOURCES
+    main.cpp
+    PostgresDB.cpp
+    LoginSignUpForm.cpp
+    DashboardAnimalForm.cpp
+)
 
-Настроить MSCLR
-MSCLR используется только на Windows. Чтобы его задействовать:
+# Создайте исполняемый файл
+add_executable(${PROJECT_NAME} ${SOURCES})
 
-Убедитесь, что Visual Studio настроена на использование /clr (Common Language Runtime).
-Включите MSCLR в свойствах проекта:
-Зайдите в свойства вашего проекта в Visual Studio.
-В разделе C/C++ → General, установите Common Language Runtime Support (/clr).
-Код для работы с MSCLR уже готов, добавлять ничего не нужно. Проверьте правильность сборки с использованием Visual Studio.
+# Линковка библиотек
+target_link_libraries(${PROJECT_NAME} pqxx pq Qt5::Widgets bcrypt)
+4. Настройка Visual Studio Code
+Установите расширения:
 
-STEP 7:
+CMake Tools.
+C/C++ от Microsoft.
+CMake.
+Создайте файл settings.json: В .vscode/settings.json добавьте:
 
-RUN -> CMake, PostgreSQL
+json
+Копировать код
+{
+    "cmake.generator": "Ninja",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "cmake.configureSettings": {
+        "CMAKE_TOOLCHAIN_FILE": "C:/path_to_vcpkg/scripts/buildsystems/vcpkg.cmake"
+    },
+    "files.associations": {
+        "*.h": "cpp",
+        "*.hpp": "cpp"
+    }
+}
+Создайте файл launch.json: Для отладки создайте .vscode/launch.json:
+
+json
+Копировать код
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/zoocpp.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "build"
+        }
+    ]
+}
+Создайте файл tasks.json: В .vscode/tasks.json добавьте задачу сборки:
+
+json
+Копировать код
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "cmake --build build",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
+5. Настройка PostgreSQL
+Убедитесь, что PostgreSQL запущен.
+Создайте базу данных:
+sql
+Копировать код
+CREATE DATABASE zoo;
+Создайте таблицу:
+sql
+Копировать код
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL
+);
+6. Сборка и запуск
+Откройте терминал в VSCode.
+Выполните:
+bash
+Копировать код
+cmake -S . -B build
+cmake --build build
+Запустите приложение из отладчика (F5).
