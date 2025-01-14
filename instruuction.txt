@@ -1,3 +1,48 @@
 for windows
 
+STEP 1:
+
 vcpkg install libpqxx
+vcpkg install libpqxx:x64-windows
+
+STEP 2:
+
+Добавить путь vcpkg к CMake
+set(CMAKE_TOOLCHAIN_FILE "C:/path_to_vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+find_package(libpqxx REQUIRED)
+target_link_libraries(${PROJECT_NAME} pqxx pq)
+
+STEP 3:
+
+vcpkg install bcrypt-cpp:x64-windows
+
+STEP 4:
+
+Добавить bcrypt в зависимости
+
+find_package(bcrypt REQUIRED)
+target_link_libraries(${PROJECT_NAME} bcrypt)
+
+
+STEP 5:
+
+Установить Qt
+
+find_package(Qt5 REQUIRED COMPONENTS Widgets)
+target_link_libraries(${PROJECT_NAME} Qt5::Widgets)
+
+
+STEP 6:
+
+Настроить MSCLR
+MSCLR используется только на Windows. Чтобы его задействовать:
+
+Убедитесь, что Visual Studio настроена на использование /clr (Common Language Runtime).
+Включите MSCLR в свойствах проекта:
+Зайдите в свойства вашего проекта в Visual Studio.
+В разделе C/C++ → General, установите Common Language Runtime Support (/clr).
+Код для работы с MSCLR уже готов, добавлять ничего не нужно. Проверьте правильность сборки с использованием Visual Studio.
+
+STEP 7:
+
+RUN -> CMake, PostgreSQL
